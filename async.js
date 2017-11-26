@@ -12,6 +12,10 @@ function runParallel(jobs, parallelNum, timeout = 1000) {
         let currentJob = 0;
         let results = [];
 
+        for (let i = 0; i < parallelNum; i++) {
+            start(jobs[currentJob], currentJob++);
+        }
+
         function start(job, currentJobIndex) {
             let onFinish = result => finish(result, currentJobIndex);
 
@@ -25,17 +29,15 @@ function runParallel(jobs, parallelNum, timeout = 1000) {
 
         function finish(result, index) {
             results[index] = result;
-            if (currentJob === jobs.length) {
+            if (results.length === jobs.length) {
                 resolve(results);
+
+                return;
             }
 
             if (currentJob < jobs.length) {
                 start(jobs[currentJob], currentJob++);
             }
-        }
-
-        for (let i = 0; i < parallelNum; i++) {
-            start(jobs[currentJob], currentJob++);
         }
     });
 }
