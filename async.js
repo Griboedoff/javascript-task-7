@@ -15,12 +15,12 @@ function runParallel(jobs, parallelNum, timeout = 1000) {
         function start(job, currentJobIndex) {
             let onFinish = result => finish(result, currentJobIndex);
 
-            return new Promise((resolveJob, rejectJob) => {
-                job().then(resolveJob, rejectJob)
-                    .then(onFinish)
-                    .catch(onFinish);
+            new Promise((resolveJob, rejectJob) => {
+                job().then(resolveJob, rejectJob);
                 setTimeout(rejectJob, timeout, new Error('Promise timeout'));
-            });
+            })
+                .then(onFinish)
+                .catch(onFinish);
         }
 
         function finish(result, index) {
