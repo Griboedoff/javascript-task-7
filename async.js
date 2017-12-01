@@ -6,7 +6,7 @@ exports.runParallel = runParallel;
 function runParallel(jobs, parallelNum, timeout = 1000) {
     return new Promise(resolve => {
         if (!jobs.length) {
-            resolve([]);
+            resolve(jobs);
         }
 
         let currentJob = 0;
@@ -30,9 +30,7 @@ function runParallel(jobs, parallelNum, timeout = 1000) {
         function finish(result, index) {
             results[index] = result;
             if (results.length === jobs.length) {
-                resolve(results);
-
-                return;
+                return resolve(results);
             }
 
             if (currentJob < jobs.length) {
